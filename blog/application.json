@@ -1,0 +1,73 @@
+{
+  "id" : "blog",
+  "name" : "blog",
+  "html-app" : "/app/index.html",
+  "resources" : {
+    "app" : {
+      "type" : "filesystem",
+      "config" : {
+        "directory" : "${application.dir}/app/"
+      }
+    },
+    "git" : {
+      "type" : "git",
+      "config" : { }
+    },
+    "application-clients" : {
+      "type" : "application-clients",
+      "config" : { }
+    },
+    "client" : {
+      "type" : "aggregating-filesystem",
+      "config" : {
+        "directory" : "${io.liveoak.js.dir}"
+      }
+    },
+    "storage" : {
+      "type" : "mongo",
+      "config" : {
+        "db" : "blog",
+        "servers" : [ {
+          "host" : "localhost",
+          "port" : 27017
+        } ],
+        "credentials" : [ ]
+      }
+    },
+    "auth" : {
+      "type" : "keycloak",
+      "config" : { }
+    },
+    "authz" : {
+      "type" : "security",
+      "config" : {
+        "policies" : [ {
+          "policyName" : "URIPolicy",
+          "policyResourceEndpoint" : "/blog/uri-policy/authzCheck"
+        }, {
+          "policyName" : "ACLPolicy",
+          "policyResourceEndpoint" : "/blog/acl-policy/authzCheck",
+          "includedResourcePrefixes" : [ "/blog" ]
+        } ]
+      }
+    },
+    "uri-policy" : {
+      "type" : "uri-policy",
+      "config" : {
+        "rules" : [ {
+          "uriPattern" : "*",
+          "requestTypes" : [ "*" ],
+          "allowedUsers" : [ "*" ]
+        } ]
+      }
+    },
+    "acl-policy" : {
+      "type" : "acl-policy",
+      "config" : {
+        "autoRules" : [ ]
+      }
+    }
+  },
+  "visible" : true,
+  "version-resource-id" : "git"
+}
